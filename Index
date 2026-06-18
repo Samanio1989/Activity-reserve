@@ -12,19 +12,13 @@
 
     :root {
       --blue:#2563eb;
-      --sky:#38bdf8;
       --dark:#0f172a;
       --gray:#64748b;
-      --light:#f8fafc;
-      --white:#ffffff;
       --border:#e2e8f0;
       --red:#dc2626;
     }
 
-    * {
-      box-sizing:border-box;
-      font-family:'Prompt',sans-serif;
-    }
+    * { box-sizing:border-box; font-family:'Prompt',sans-serif; }
 
     body {
       margin:0;
@@ -40,21 +34,10 @@
       box-shadow:0 12px 30px rgba(15,23,42,.25);
     }
 
-    header h1 {
-      margin:0;
-      font-size:24px;
-    }
+    header h1 { margin:0; font-size:24px; }
+    header p { margin:6px 0 0; color:#dbeafe; }
 
-    header p {
-      margin:6px 0 0;
-      color:#dbeafe;
-    }
-
-    .container {
-      max-width:1200px;
-      margin:auto;
-      padding:20px;
-    }
+    .container { max-width:1200px; margin:auto; padding:20px; }
 
     .card {
       background:white;
@@ -71,12 +54,7 @@
       gap:12px;
     }
 
-    label {
-      font-size:13px;
-      color:var(--gray);
-      display:block;
-      margin-bottom:5px;
-    }
+    label { font-size:13px; color:var(--gray); display:block; margin-bottom:5px; }
 
     input, textarea, select {
       width:100%;
@@ -87,10 +65,7 @@
       background:#fff;
     }
 
-    textarea {
-      min-height:80px;
-      resize:vertical;
-    }
+    textarea { min-height:80px; resize:vertical; }
 
     button {
       border:none;
@@ -104,52 +79,22 @@
       margin:3px;
     }
 
-    button:hover {
-      transform:translateY(-1px);
-      opacity:.9;
-    }
+    button:hover { transform:translateY(-1px); opacity:.9; }
 
-    .btn-light {
-      background:#e0f2fe;
-      color:#075985;
-    }
+    .btn-light { background:#e0f2fe; color:#075985; }
+    .btn-dark { background:#0f172a; color:white; }
+    .btn-red { background:#dc2626; color:white; }
 
-    .btn-dark {
-      background:#0f172a;
-      color:white;
-    }
+    .hidden { display:none; }
 
-    .btn-red {
-      background:#dc2626;
-      color:white;
-    }
+    nav { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
 
-    .hidden {
-      display:none;
-    }
+    .tab { background:#e2e8f0; color:#0f172a; }
+    .tab.active { background:var(--blue); color:white; }
 
-    nav {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin:18px 0;
-    }
+    .table-wrap { overflow-x:auto; }
 
-    .tab {
-      background:#e2e8f0;
-      color:#0f172a;
-    }
-
-    .tab.active {
-      background:var(--blue);
-      color:white;
-    }
-
-    table {
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-    }
+    table { width:100%; border-collapse:collapse; font-size:13px; min-width:850px; }
 
     th,td {
       border-bottom:1px solid var(--border);
@@ -158,10 +103,7 @@
       vertical-align:top;
     }
 
-    th {
-      background:#f1f5f9;
-      color:#334155;
-    }
+    th { background:#f1f5f9; color:#334155; }
 
     .badge {
       padding:4px 9px;
@@ -187,14 +129,8 @@
       background:#fff;
     }
 
-    .event h3 {
-      margin:0 0 8px;
-    }
-
-    .small {
-      color:var(--gray);
-      font-size:13px;
-    }
+    .event h3 { margin:0 0 8px; }
+    .small { color:var(--gray); font-size:13px; }
 
     .status {
       margin-top:10px;
@@ -203,10 +139,7 @@
       border-radius:12px;
     }
 
-    .login-box {
-      max-width:430px;
-      margin:40px auto;
-    }
+    .login-box { max-width:430px; margin:40px auto; }
 
     .map-note {
       padding:10px;
@@ -235,6 +168,58 @@
       color:white;
       border-color:#2563eb;
     }
+
+    .modal {
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.55);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:16px;
+    }
+
+    .modal.hidden {
+      display:none;
+    }
+
+    .modal-box {
+      background:white;
+      width:100%;
+      max-width:420px;
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 20px 50px rgba(0,0,0,.25);
+    }
+
+  
+    .warning {
+      padding:12px;
+      border-radius:14px;
+      background:#fff7ed;
+      color:#9a3412;
+      font-size:13px;
+      margin:12px 0;
+      border:1px solid #fed7aa;
+    }
+
+    video, .photo-preview {
+      width:100%;
+      border-radius:14px;
+      background:#0f172a;
+      margin:8px 0 12px;
+    }
+
+    .permission-note {
+      font-size:13px;
+      color:#475569;
+      padding:10px;
+      background:#f8fafc;
+      border-radius:12px;
+      margin:10px 0;
+    }
+
   </style>
 </head>
 
@@ -249,6 +234,10 @@
 
   <section id="loginSection" class="card login-box">
     <h2>เข้าสู่ระบบ</h2>
+    <div class="warning">
+      กรุณาเปิดระบบผ่าน Google Chrome หรือ Safari โดยตรง เพื่อใช้งานกล้องและ Location ได้สมบูรณ์
+      หากเปิดผ่าน Messenger หรือ LINE อาจไม่สามารถเปิดกล้อง/ตำแหน่งได้
+    </div>
     <p class="small">นักศึกษาเข้าสู่ระบบด้วยรหัสนักศึกษา 8 หลัก และรหัสผ่านเป็นวันเดือนปีเกิด 8 หลัก</p>
 
     <label>Username</label>
@@ -288,31 +277,11 @@
         <input id="eventId" type="hidden">
 
         <div class="grid">
-          <div>
-            <label>ชื่อกิจกรรม</label>
-            <input id="title">
-          </div>
-
-          <div>
-            <label>วันที่จัดกิจกรรม</label>
-            <input id="eventDate" type="date">
-          </div>
-
-          <div>
-            <label>เวลาเริ่มกิจกรรม</label>
-            <input id="startTime" type="time">
-          </div>
-
-          <div>
-            <label>เวลาสิ้นสุดกิจกรรม</label>
-            <input id="endTime" type="time">
-          </div>
-
-          <div>
-            <label>จำนวนผู้เข้าร่วม</label>
-            <input id="capacity" type="number">
-          </div>
-
+          <div><label>ชื่อกิจกรรม</label><input id="title"></div>
+          <div><label>วันที่จัดกิจกรรม</label><input id="eventDate" type="date"></div>
+          <div><label>เวลาเริ่มกิจกรรม</label><input id="startTime" type="time"></div>
+          <div><label>เวลาสิ้นสุดกิจกรรม</label><input id="endTime" type="time"></div>
+          <div><label>จำนวนผู้เข้าร่วม</label><input id="capacity" type="number"></div>
           <div>
             <label>ประเภทกิจกรรม</label>
             <select id="activityType" onchange="toggleLocation()">
@@ -320,7 +289,6 @@
               <option value="on-site">on-site</option>
             </select>
           </div>
-
           <div>
             <label>กิจกรรมระดับ</label>
             <select id="level">
@@ -328,11 +296,7 @@
               <option value="คณะ">คณะ</option>
             </select>
           </div>
-
-          <div>
-            <label>ประกาศให้เห็นตั้งแต่วันที่</label>
-            <input id="publishDate" type="date">
-          </div>
+          <div><label>ประกาศให้เห็นตั้งแต่วันที่</label><input id="publishDate" type="date"></div>
         </div>
 
         <br>
@@ -341,25 +305,10 @@
         <textarea id="description"></textarea>
 
         <div class="grid">
-          <div>
-            <label>Check-in ตั้งแต่</label>
-            <input id="checkinStart" type="time">
-          </div>
-
-          <div>
-            <label>Check-in สิ้นสุด</label>
-            <input id="checkinEnd" type="time">
-          </div>
-
-          <div>
-            <label>Check-out ตั้งแต่</label>
-            <input id="checkoutStart" type="time">
-          </div>
-
-          <div>
-            <label>Check-out สิ้นสุด</label>
-            <input id="checkoutEnd" type="time">
-          </div>
+          <div><label>Check-in ตั้งแต่</label><input id="checkinStart" type="time"></div>
+          <div><label>Check-in สิ้นสุด</label><input id="checkinEnd" type="time"></div>
+          <div><label>Check-out ตั้งแต่</label><input id="checkoutStart" type="time"></div>
+          <div><label>Check-out สิ้นสุด</label><input id="checkoutEnd" type="time"></div>
         </div>
 
         <br>
@@ -374,21 +323,13 @@
         </div>
 
         <div class="grid">
-          <div>
-            <label>Google Map Link สำหรับ Check-in</label>
-            <input id="checkinMapLink" placeholder="วางลิงก์ Google Map จุด Check-in">
-          </div>
-
-          <div>
-            <label>Google Map Link สำหรับ Check-out</label>
-            <input id="checkoutMapLink" placeholder="วางลิงก์ Google Map จุด Check-out">
-          </div>
+          <div><label>Google Map Link สำหรับ Check-in</label><input id="checkinMapLink" placeholder="วางลิงก์ Google Map จุด Check-in"></div>
+          <div><label>Google Map Link สำหรับ Check-out</label><input id="checkoutMapLink" placeholder="วางลิงก์ Google Map จุด Check-out"></div>
         </div>
 
         <br>
 
         <label>ชั้นปีที่สามารถเข้าร่วมได้</label>
-
         <div class="year-buttons" id="allowedYearsBox">
           <button type="button" class="year-btn active" data-year="ทุกชั้นปี" onclick="toggleYear(this)">ทุกชั้นปี</button>
           <button type="button" class="year-btn" data-year="1" onclick="toggleYear(this)">ปี 1</button>
@@ -415,34 +356,36 @@
         <h2>เพิ่ม / แก้ไขรายชื่อนักศึกษา</h2>
 
         <div class="grid">
-          <div>
-            <label>รหัสนักศึกษา</label>
-            <input id="studentId">
-          </div>
-          <div>
-            <label>ชื่อ-สกุล</label>
-            <input id="fullName">
-          </div>
-          <div>
-            <label>สาขาวิชา</label>
-            <input id="major">
-          </div>
-          <div>
-            <label>คณะ</label>
-            <input id="faculty">
-          </div>
-          <div>
-            <label>วันเดือนปีเกิด 8 หลัก</label>
-            <input id="birthDate">
-          </div>
-          <div>
-            <label>เบอร์โทรศัพท์</label>
-            <input id="phone">
-          </div>
+          <div><label>รหัสนักศึกษา</label><input id="studentId"></div>
+          <div><label>ชื่อ-สกุล</label><input id="fullName"></div>
+          <div><label>สาขาวิชา</label><input id="major"></div>
+          <div><label>คณะ</label><input id="faculty"></div>
+          <div><label>วันเดือนปีเกิด 8 หลัก</label><input id="birthDate"></div>
+          <div><label>เบอร์โทรศัพท์</label><input id="phone"></div>
         </div>
 
         <br>
         <button onclick="saveStudent()">บันทึกนักศึกษา</button>
+        <button class="btn-light" onclick="clearStudentForm()">ล้างฟอร์ม</button>
+      </div>
+
+      <div class="card">
+        <h2>ค้นหารายชื่อนักศึกษา</h2>
+
+        <div class="grid">
+          <div>
+            <label>ค้นหาจากรหัส / ชื่อ / สาขา / คณะ / เบอร์โทร</label>
+            <input id="studentSearch" placeholder="พิมพ์คำค้นหา" onkeydown="if(event.key==='Enter') loadStudents()">
+          </div>
+
+          <div style="display:flex;align-items:end;flex-wrap:wrap;">
+            <button onclick="loadStudents()">ค้นหา</button>
+            <button class="btn-light" onclick="resetStudentSearch()">แสดงทั้งหมด</button>
+          </div>
+        </div>
+
+        <br>
+        <div id="studentList"></div>
       </div>
     </section>
 
@@ -464,11 +407,33 @@
   </section>
 </div>
 
+
+<div id="cameraModal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="cameraTitle">ถ่ายภาพยืนยันตัวตน</h3>
+
+    <div class="permission-note">
+      ระบบจะใช้รูปถ่ายพร้อมตำแหน่งปัจจุบันเพื่อยืนยันการ Check-in / Check-out
+    </div>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" class="hidden"></canvas>
+    <img id="photoPreview" class="photo-preview hidden" alt="preview">
+
+    <button onclick="capturePhoto()">📸 ถ่ายภาพ</button>
+    <button id="usePhotoBtn" class="btn-dark hidden" onclick="useCapturedPhoto()">ใช้ภาพนี้</button>
+    <button class="btn-light" onclick="closeCameraModal()">ยกเลิก</button>
+  </div>
+</div>
+
 <script>
 let currentUser = null;
 let currentRole = null;
 let currentStudent = null;
 let allEvents = [];
+let currentStream = null;
+let capturedImage = null;
+let photoResolver = null;
 
 function call(fn, ...args) {
   return new Promise((resolve, reject) => {
@@ -538,6 +503,13 @@ async function showPage(id) {
 
   document.getElementById(id).classList.remove('hidden');
 
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+  Array.from(document.querySelectorAll('.tab')).forEach(btn => {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(id)) {
+      btn.classList.add('active');
+    }
+  });
+
   if (id === 'studentPage') {
     await loadStudentEvents();
     await loadMyBookings();
@@ -545,6 +517,10 @@ async function showPage(id) {
 
   if (id === 'adminEventsPage') {
     await loadAdminEvents();
+  }
+
+  if (id === 'adminStudentsPage') {
+    await loadStudents();
   }
 
   if (id === 'adminReportPage') {
@@ -617,7 +593,13 @@ async function saveEvent() {
 async function loadAdminEvents() {
   allEvents = await call('getEvents');
 
+  if (!allEvents.length) {
+    document.getElementById('adminEventList').innerHTML = '<p class="small">ยังไม่มีกิจกรรมในระบบ</p>';
+    return;
+  }
+
   document.getElementById('adminEventList').innerHTML = `
+    <div class="table-wrap">
     <table>
       <thead>
         <tr>
@@ -655,6 +637,7 @@ async function loadAdminEvents() {
         `).join('')}
       </tbody>
     </table>
+    </div>
   `;
 }
 
@@ -665,21 +648,19 @@ function editEvent(e) {
     el.value = e[k] || '';
   });
 
-  document.querySelectorAll('.year-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
+  document.querySelectorAll('.year-btn').forEach(btn => btn.classList.remove('active'));
 
   const years = String(e.allowedYears || 'ทุกชั้นปี').split(',');
 
   document.querySelectorAll('.year-btn').forEach(btn => {
-    if (years.includes(btn.dataset.year)) {
-      btn.classList.add('active');
-    }
+    if (years.includes(btn.dataset.year)) btn.classList.add('active');
   });
 
   if (document.querySelectorAll('.year-btn.active').length === 0) {
     document.querySelector('.year-btn[data-year="ทุกชั้นปี"]').classList.add('active');
   }
+
+  window.scrollTo({ top: document.getElementById('adminEventsPage').offsetTop, behavior: 'smooth' });
 }
 
 async function copyEvent(eventId) {
@@ -720,9 +701,100 @@ async function saveStudent() {
     const res = await call('saveStudent', data);
     alert(res.message);
 
+    clearStudentForm();
+    loadStudents();
+
   } catch (err) {
     alert(err.message);
   }
+}
+
+async function loadStudents() {
+  try {
+    const keyword = val('studentSearch');
+    const students = await call('searchStudents', keyword);
+
+    if (!students.length) {
+      document.getElementById('studentList').innerHTML =
+        '<p class="small">ไม่พบข้อมูลนักศึกษา</p>';
+      return;
+    }
+
+    document.getElementById('studentList').innerHTML = `
+      <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>รหัส</th>
+            <th>ชื่อ-สกุล</th>
+            <th>คณะ</th>
+            <th>สาขา</th>
+            <th>ชั้นปี</th>
+            <th>เบอร์โทร</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${students.map(s => `
+            <tr>
+              <td>${s.studentId || ''}</td>
+              <td>${s.fullName || ''}</td>
+              <td>${s.faculty || ''}</td>
+              <td>${s.major || ''}</td>
+              <td>${s.yearLevel || ''}</td>
+              <td>${s.phone || ''}</td>
+              <td>
+                <button class="btn-light" onclick='editStudent(${JSON.stringify(s)})'>แก้ไข</button>
+                <button class="btn-red" onclick="removeStudent('${s.studentId}')">ลบ</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      </div>
+    `;
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+function editStudent(s) {
+  document.getElementById('studentId').value = s.studentId || '';
+  document.getElementById('fullName').value = s.fullName || '';
+  document.getElementById('major').value = s.major || '';
+  document.getElementById('faculty').value = s.faculty || '';
+  document.getElementById('birthDate').value = s.birthDate || '';
+  document.getElementById('phone').value = s.phone || '';
+
+  window.scrollTo({
+    top: document.getElementById('adminStudentsPage').offsetTop,
+    behavior: 'smooth'
+  });
+}
+
+async function removeStudent(studentId) {
+  if (!confirm('ยืนยันการลบนักศึกษารหัส ' + studentId + ' ?')) return;
+
+  try {
+    const res = await call('deleteStudent', studentId);
+    alert(res.message);
+
+    clearStudentForm();
+    loadStudents();
+
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+function clearStudentForm() {
+  ['studentId','fullName','major','faculty','birthDate','phone']
+    .forEach(id => document.getElementById(id).value = '');
+}
+
+function resetStudentSearch() {
+  document.getElementById('studentSearch').value = '';
+  loadStudents();
 }
 
 /* ---------- STUDENT ---------- */
@@ -731,6 +803,11 @@ async function loadStudentEvents() {
   allEvents = await call('getEvents');
 
   const visibleEvents = allEvents.filter(e => e.visible);
+
+  if (!visibleEvents.length) {
+    document.getElementById('eventCalendar').innerHTML = '<p class="small">ยังไม่มีกิจกรรมที่เปิดให้จอง</p>';
+    return;
+  }
 
   document.getElementById('eventCalendar').innerHTML = visibleEvents.map(e => `
     <div class="event">
@@ -751,17 +828,37 @@ async function loadStudentEvents() {
   `).join('');
 }
 
-async function openBooking(eventId) {
-  const phone = prompt('กรอกเบอร์โทรศัพท์ 10 หลักเพื่ออัปเดตข้อมูล');
-  if (!phone) return;
+function openBooking(eventId) {
+  document.getElementById('bookingEventId').value = eventId;
+  document.getElementById('bookingPhone').value = currentStudent.phone || '';
+  document.getElementById('bookingBirthDate').value = '';
+  document.getElementById('bookingModal').classList.remove('hidden');
+}
 
-  const birthDate = prompt('กรอกวันเดือนปีเกิด 8 หลัก เพื่อยืนยันการจอง');
-  if (!birthDate) return;
+function closeBookingModal() {
+  document.getElementById('bookingModal').classList.add('hidden');
+}
+
+async function confirmBooking() {
+  const eventId = val('bookingEventId');
+  const phone = val('bookingPhone');
+  const birthDate = val('bookingBirthDate');
+
+  if (!/^0\d{9}$/.test(phone)) {
+    alert('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง 10 หลัก และขึ้นต้นด้วย 0');
+    return;
+  }
+
+  if (!/^\d{8}$/.test(birthDate)) {
+    alert('กรุณากรอกวันเดือนปีเกิดเป็นตัวเลข 8 หลัก');
+    return;
+  }
 
   try {
     const res = await call('bookEvent', eventId, currentStudent.studentId, phone, birthDate);
     alert(res.message);
 
+    closeBookingModal();
     loadStudentEvents();
     loadMyBookings();
 
@@ -808,28 +905,106 @@ function getLocation() {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude
       }),
-      () => reject(new Error('กรุณาอนุญาตให้ใช้ Location ก่อนใช้งาน')),
-      { enableHighAccuracy:true }
+      () => reject(new Error('กรุณาอนุญาต Location เพื่อระบุตำแหน่งที่ตั้งขณะใช้งาน')),
+      {
+        enableHighAccuracy:true,
+        timeout:15000,
+        maximumAge:0
+      }
     );
   });
 }
 
-async function requestCamera() {
+async function openCameraForPhoto(title) {
+  capturedImage = null;
+  document.getElementById('cameraTitle').innerText = title || 'ถ่ายภาพยืนยันตัวตน';
+  document.getElementById('photoPreview').classList.add('hidden');
+  document.getElementById('usePhotoBtn').classList.add('hidden');
+  document.getElementById('video').classList.remove('hidden');
+
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video:true });
-    stream.getTracks().forEach(t => t.stop());
-    return true;
-  } catch {
+    currentStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'user',
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    });
+
+    document.getElementById('video').srcObject = currentStream;
+    document.getElementById('cameraModal').classList.remove('hidden');
+
+    return new Promise((resolve, reject) => {
+      photoResolver = { resolve, reject };
+    });
+
+  } catch (err) {
     throw new Error('กรุณาอนุญาตให้ใช้กล้องก่อน Check-in / Check-out');
+  }
+}
+
+function closeCameraModal() {
+  document.getElementById('cameraModal').classList.add('hidden');
+
+  if (currentStream) {
+    currentStream.getTracks().forEach(track => track.stop());
+    currentStream = null;
+  }
+
+  if (photoResolver) {
+    photoResolver.reject(new Error('ยกเลิกการถ่ายภาพ'));
+    photoResolver = null;
+  }
+}
+
+function capturePhoto() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+
+  if (!video.videoWidth || !video.videoHeight) {
+    alert('กล้องยังไม่พร้อม กรุณารอสักครู่');
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  capturedImage = canvas.toDataURL('image/jpeg', 0.75);
+
+  document.getElementById('photoPreview').src = capturedImage;
+  document.getElementById('photoPreview').classList.remove('hidden');
+  document.getElementById('usePhotoBtn').classList.remove('hidden');
+  document.getElementById('video').classList.add('hidden');
+}
+
+function useCapturedPhoto() {
+  if (!capturedImage) {
+    alert('กรุณาถ่ายภาพก่อน');
+    return;
+  }
+
+  if (currentStream) {
+    currentStream.getTracks().forEach(track => track.stop());
+    currentStream = null;
+  }
+
+  document.getElementById('cameraModal').classList.add('hidden');
+
+  if (photoResolver) {
+    photoResolver.resolve(capturedImage);
+    photoResolver = null;
   }
 }
 
 async function doCheckIn(eventId) {
   try {
-    await requestCamera();
     const loc = await getLocation();
+    const photo = await openCameraForPhoto('ถ่ายภาพยืนยัน Check-in');
 
-    const res = await call('checkIn', eventId, currentStudent.studentId, loc.lat, loc.lng);
+    const res = await call('checkIn', eventId, currentStudent.studentId, loc.lat, loc.lng, photo);
     alert(res.message);
 
     loadMyBookings();
@@ -841,10 +1016,10 @@ async function doCheckIn(eventId) {
 
 async function doCheckOut(eventId) {
   try {
-    await requestCamera();
     const loc = await getLocation();
+    const photo = await openCameraForPhoto('ถ่ายภาพยืนยัน Check-out');
 
-    const res = await call('checkOut', eventId, currentStudent.studentId, loc.lat, loc.lng);
+    const res = await call('checkOut', eventId, currentStudent.studentId, loc.lat, loc.lng, photo);
     alert(res.message);
 
     loadMyBookings();
@@ -867,11 +1042,20 @@ async function loadReportEvents() {
 
 async function loadReport() {
   const eventId = val('reportEvent');
-  if (!eventId) return;
+  if (!eventId) {
+    document.getElementById('reportTable').innerHTML = '<p class="small">ยังไม่มีกิจกรรมสำหรับรายงาน</p>';
+    return;
+  }
 
   const rows = await call('getEventReport', eventId);
 
+  if (!rows.length) {
+    document.getElementById('reportTable').innerHTML = '<p class="small">ยังไม่มีผู้จองกิจกรรมนี้</p>';
+    return;
+  }
+
   document.getElementById('reportTable').innerHTML = `
+    <div class="table-wrap">
     <table>
       <thead>
         <tr>
@@ -882,7 +1066,9 @@ async function loadReport() {
           <th>ชั้นปี</th>
           <th>สถานะ</th>
           <th>Check-in</th>
+          <th>รูป IN</th>
           <th>Check-out</th>
+          <th>รูป OUT</th>
         </tr>
       </thead>
       <tbody>
@@ -894,12 +1080,15 @@ async function loadReport() {
             <td>${r.major || ''}</td>
             <td>${r.yearLevel || ''}</td>
             <td>${r.status}</td>
-            <td>${r.checkinAt || '-'}</td>
-            <td>${r.checkoutAt || '-'}</td>
+            <td>${r.checkinAt || '-'}<br>${r.checkinDistance ? r.checkinDistance + ' ม.' : ''}</td>
+            <td>${r.checkinPhotoUrl ? `<a href="${r.checkinPhotoUrl}" target="_blank">ดูรูป</a>` : '-'}</td>
+            <td>${r.checkoutAt || '-'}<br>${r.checkoutDistance ? r.checkoutDistance + ' ม.' : ''}</td>
+            <td>${r.checkoutPhotoUrl ? `<a href="${r.checkoutPhotoUrl}" target="_blank">ดูรูป</a>` : '-'}</td>
           </tr>
         `).join('')}
       </tbody>
     </table>
+    </div>
   `;
 }
 
@@ -921,6 +1110,25 @@ function toggleLocation() {
     type === 'on-site' ? 'block' : 'none';
 }
 </script>
+
+
+<div id="bookingModal" class="modal hidden">
+  <div class="modal-box">
+    <h3>ยืนยันการจองกิจกรรม</h3>
+
+    <input id="bookingEventId" type="hidden">
+
+    <label>เบอร์โทรศัพท์ 10 หลัก</label>
+    <input id="bookingPhone" inputmode="numeric" maxlength="10" placeholder="เช่น 0812345678">
+
+    <label>วันเดือนปีเกิด 8 หลัก</label>
+    <input id="bookingBirthDate" inputmode="numeric" maxlength="8" placeholder="เช่น 01012549">
+
+    <br><br>
+    <button onclick="confirmBooking()">ยืนยันการจอง</button>
+    <button class="btn-light" onclick="closeBookingModal()">ยกเลิก</button>
+  </div>
+</div>
 
 </body>
 </html>
