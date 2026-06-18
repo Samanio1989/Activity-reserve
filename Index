@@ -18,6 +18,7 @@
       --light:#f8fafc;
       --white:#ffffff;
       --border:#e2e8f0;
+      --red:#dc2626;
     }
 
     * {
@@ -100,6 +101,7 @@
       background:var(--blue);
       color:white;
       transition:.2s;
+      margin:3px;
     }
 
     button:hover {
@@ -119,6 +121,7 @@
 
     .btn-red {
       background:#dc2626;
+      color:white;
     }
 
     .hidden {
@@ -167,6 +170,7 @@
       display:inline-block;
       background:#e0f2fe;
       color:#075985;
+      margin:2px;
     }
 
     .calendar {
@@ -203,6 +207,15 @@
       max-width:430px;
       margin:40px auto;
     }
+
+    .map-note {
+      padding:10px;
+      border-radius:12px;
+      background:#eff6ff;
+      color:#1e40af;
+      font-size:13px;
+      margin:10px 0;
+    }
   </style>
 </head>
 
@@ -237,7 +250,6 @@
 
     <nav id="menu"></nav>
 
-    <!-- STUDENT -->
     <section id="studentPage" class="hidden">
       <div class="card">
         <h2>ปฏิทินกิจกรรม</h2>
@@ -250,7 +262,6 @@
       </div>
     </section>
 
-    <!-- ADMIN EVENTS -->
     <section id="adminEventsPage" class="hidden">
       <div class="card">
         <h2>จัดการกิจกรรม</h2>
@@ -269,17 +280,17 @@
           </div>
 
           <div>
-            <label>เวลาเริ่ม</label>
+            <label>เวลาเริ่มกิจกรรม</label>
             <input id="startTime" type="time">
           </div>
 
           <div>
-            <label>เวลาสิ้นสุด</label>
+            <label>เวลาสิ้นสุดกิจกรรม</label>
             <input id="endTime" type="time">
           </div>
 
           <div>
-            <label>จำนวนรับ</label>
+            <label>จำนวนผู้เข้าร่วม</label>
             <input id="capacity" type="number">
           </div>
 
@@ -335,32 +346,29 @@
         <br>
 
         <div id="locationBox">
-          <label>Location / Google Map Link</label>
-          <input id="location" placeholder="วางลิงก์ Google Map หรือชื่อสถานที่">
+          <label>Location / สถานที่จัดกิจกรรม</label>
+          <input id="location" placeholder="ระบุสถานที่จัดกิจกรรม">
+        </div>
+
+        <div class="map-note">
+          วางลิงก์ Google Map แยกจุด Check-in และ Check-out ระบบจะดึง Latitude / Longitude ให้อัตโนมัติเมื่อกดบันทึก
         </div>
 
         <div class="grid">
           <div>
-            <label>พิกัด Check-in Latitude</label>
-            <input id="checkinLat">
+            <label>Google Map Link สำหรับ Check-in</label>
+            <input id="checkinMapLink" placeholder="วางลิงก์ Google Map จุด Check-in">
           </div>
+
           <div>
-            <label>พิกัด Check-in Longitude</label>
-            <input id="checkinLng">
-          </div>
-          <div>
-            <label>พิกัด Check-out Latitude</label>
-            <input id="checkoutLat">
-          </div>
-          <div>
-            <label>พิกัด Check-out Longitude</label>
-            <input id="checkoutLng">
+            <label>Google Map Link สำหรับ Check-out</label>
+            <input id="checkoutMapLink" placeholder="วางลิงก์ Google Map จุด Check-out">
           </div>
         </div>
 
         <br>
 
-        <label>ชั้นปีที่เข้าร่วมได้</label>
+        <label>ชั้นปีที่สามารถเข้าร่วมได้</label>
         <select id="allowedYears" multiple>
           <option value="ทุกชั้นปี">ทุกชั้นปี</option>
           <option value="1">ปี 1</option>
@@ -371,6 +379,7 @@
         </select>
 
         <br><br>
+
         <button onclick="saveEvent()">บันทึกกิจกรรม</button>
         <button class="btn-light" onclick="clearEventForm()">ล้างฟอร์ม</button>
       </div>
@@ -381,7 +390,6 @@
       </div>
     </section>
 
-    <!-- ADMIN STUDENTS -->
     <section id="adminStudentsPage" class="hidden">
       <div class="card">
         <h2>เพิ่ม / แก้ไขรายชื่อนักศึกษา</h2>
@@ -418,7 +426,6 @@
       </div>
     </section>
 
-    <!-- ADMIN REPORT -->
     <section id="adminReportPage" class="hidden">
       <div class="card">
         <h2>รายงานการจอง / Check-in / Check-out</h2>
@@ -433,8 +440,8 @@
         <div id="reportTable" style="margin-top:20px"></div>
       </div>
     </section>
-  </section>
 
+  </section>
 </div>
 
 <script>
@@ -454,8 +461,8 @@ function call(fn, ...args) {
 
 async function login() {
   try {
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value.trim();
+    const user = val('loginUser');
+    const pass = val('loginPass');
 
     const res = await call('login', user, pass);
 
@@ -477,6 +484,7 @@ async function login() {
       : `${currentStudent.fullName} (${currentStudent.studentId})`;
 
     buildMenu();
+
   } catch (err) {
     alert(err.message);
   }
@@ -488,7 +496,6 @@ function logout() {
 
 function buildMenu() {
   const menu = document.getElementById('menu');
-  menu.innerHTML = '';
 
   if (currentRole === 'admin') {
     menu.innerHTML = `
@@ -525,10 +532,12 @@ async function showPage(id) {
   }
 }
 
-/* ---------- Admin Event ---------- */
+/* ADMIN EVENT */
 
 function selectedValues(id) {
-  return Array.from(document.getElementById(id).selectedOptions).map(o => o.value).join(',');
+  return Array.from(document.getElementById(id).selectedOptions)
+    .map(o => o.value)
+    .join(',');
 }
 
 async function saveEvent() {
@@ -547,20 +556,19 @@ async function saveEvent() {
       checkoutEnd: val('checkoutEnd'),
       activityType: val('activityType'),
       location: val('location'),
-      checkinLat: val('checkinLat'),
-      checkinLng: val('checkinLng'),
-      checkoutLat: val('checkoutLat'),
-      checkoutLng: val('checkoutLng'),
+      checkinMapLink: val('checkinMapLink'),
+      checkoutMapLink: val('checkoutMapLink'),
       publishDate: val('publishDate'),
       level: val('level'),
-      allowedYears: selectedValues('allowedYears') || 'ทุกชั้นปี',
-      status: 'active'
+      allowedYears: selectedValues('allowedYears') || 'ทุกชั้นปี'
     };
 
     const res = await call('saveEvent', data);
     alert(res.message);
+
     clearEventForm();
     loadAdminEvents();
+
   } catch (err) {
     alert(err.message);
   }
@@ -577,6 +585,7 @@ async function loadAdminEvents() {
           <th>วันที่</th>
           <th>เวลา</th>
           <th>จอง</th>
+          <th>พิกัด</th>
           <th>จัดการ</th>
         </tr>
       </thead>
@@ -592,6 +601,10 @@ async function loadAdminEvents() {
             <td>${e.startTime} - ${e.endTime}</td>
             <td>${e.booked}/${e.capacity}</td>
             <td>
+              IN: ${e.checkinLat || '-'}, ${e.checkinLng || '-'}<br>
+              OUT: ${e.checkoutLat || '-'}, ${e.checkoutLng || '-'}
+            </td>
+            <td>
               <button class="btn-light" onclick='editEvent(${JSON.stringify(e)})'>แก้ไข</button>
               <button class="btn-light" onclick="copyEvent('${e.eventId}')">คัดลอก</button>
               <button class="btn-red" onclick="deleteEvent('${e.eventId}')">ลบ</button>
@@ -606,8 +619,14 @@ async function loadAdminEvents() {
 function editEvent(e) {
   Object.keys(e).forEach(k => {
     const el = document.getElementById(k);
-    if (el && el.tagName !== 'SELECT') el.value = e[k];
-    if (el && el.tagName === 'SELECT' && !el.multiple) el.value = e[k];
+    if (!el) return;
+
+    if (el.tagName === 'SELECT' && el.multiple) {
+      const values = String(e[k] || '').split(',');
+      Array.from(el.options).forEach(opt => opt.selected = values.includes(opt.value));
+    } else {
+      el.value = e[k] || '';
+    }
   });
 }
 
@@ -619,6 +638,7 @@ async function copyEvent(eventId) {
 
 async function deleteEvent(eventId) {
   if (!confirm('ยืนยันการลบกิจกรรมนี้?')) return;
+
   const res = await call('deleteEvent', eventId);
   alert(res.message);
   loadAdminEvents();
@@ -627,9 +647,33 @@ async function deleteEvent(eventId) {
 function clearEventForm() {
   document.querySelectorAll('#adminEventsPage input, #adminEventsPage textarea')
     .forEach(el => el.value = '');
+
+  Array.from(document.getElementById('allowedYears').options)
+    .forEach(opt => opt.selected = false);
 }
 
-/* ---------- Student ---------- */
+/* ADMIN STUDENT */
+
+async function saveStudent() {
+  try {
+    const data = {
+      studentId: val('studentId'),
+      fullName: val('fullName'),
+      major: val('major'),
+      faculty: val('faculty'),
+      birthDate: val('birthDate'),
+      phone: val('phone')
+    };
+
+    const res = await call('saveStudent', data);
+    alert(res.message);
+
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+/* STUDENT */
 
 async function loadStudentEvents() {
   allEvents = await call('getEvents');
@@ -641,11 +685,13 @@ async function loadStudentEvents() {
       <h3>${e.title}</h3>
       <div class="small">${e.eventDate} | ${e.startTime} - ${e.endTime}</div>
       <div class="small">${e.description || ''}</div>
+
       <div class="status">
         <span class="badge">${e.level}</span>
         <span class="badge">${e.activityType}</span>
         <span class="badge">จองแล้ว ${e.booked}/${e.capacity}</span>
       </div>
+
       <br>
       <button onclick="openBooking('${e.eventId}')">จองกิจกรรม</button>
     </div>
@@ -662,8 +708,10 @@ async function openBooking(eventId) {
   try {
     const res = await call('bookEvent', eventId, currentStudent.studentId, phone, birthDate);
     alert(res.message);
+
     loadStudentEvents();
     loadMyBookings();
+
   } catch (err) {
     alert(err.message);
   }
@@ -672,15 +720,22 @@ async function openBooking(eventId) {
 async function loadMyBookings() {
   const bookings = await call('getMyBookings', currentStudent.studentId);
 
+  if (bookings.length === 0) {
+    document.getElementById('myBookings').innerHTML = '<p class="small">ยังไม่มีกิจกรรมที่จอง</p>';
+    return;
+  }
+
   document.getElementById('myBookings').innerHTML = bookings.map(b => `
     <div class="event">
       <h3>${b.event.title}</h3>
       <div class="small">${b.event.eventDate} | ${b.event.startTime} - ${b.event.endTime}</div>
+
       <div class="status">
         สถานะ: <b>${b.status}</b><br>
         Check-in: ${b.checkinAt || '-'}<br>
         Check-out: ${b.checkoutAt || '-'}
       </div>
+
       <br>
       <button onclick="doCheckIn('${b.eventId}')">Check-in</button>
       <button class="btn-dark" onclick="doCheckOut('${b.eventId}')">Check-out</button>
@@ -720,9 +775,12 @@ async function doCheckIn(eventId) {
   try {
     await requestCamera();
     const loc = await getLocation();
+
     const res = await call('checkIn', eventId, currentStudent.studentId, loc.lat, loc.lng);
     alert(res.message);
+
     loadMyBookings();
+
   } catch (err) {
     alert(err.message);
   }
@@ -732,38 +790,22 @@ async function doCheckOut(eventId) {
   try {
     await requestCamera();
     const loc = await getLocation();
+
     const res = await call('checkOut', eventId, currentStudent.studentId, loc.lat, loc.lng);
     alert(res.message);
+
     loadMyBookings();
+
   } catch (err) {
     alert(err.message);
   }
 }
 
-/* ---------- Students Admin ---------- */
-
-async function saveStudent() {
-  try {
-    const data = {
-      studentId: val('studentId'),
-      fullName: val('fullName'),
-      major: val('major'),
-      faculty: val('faculty'),
-      birthDate: val('birthDate'),
-      phone: val('phone')
-    };
-
-    const res = await call('saveStudent', data);
-    alert(res.message);
-  } catch (err) {
-    alert(err.message);
-  }
-}
-
-/* ---------- Report ---------- */
+/* REPORT */
 
 async function loadReportEvents() {
   allEvents = await call('getEvents');
+
   document.getElementById('reportEvent').innerHTML =
     allEvents.map(e => `<option value="${e.eventId}">${e.title}</option>`).join('');
 
@@ -813,10 +855,11 @@ async function openExport(type) {
   window.open(links[type], '_blank');
 }
 
-/* ---------- Utils ---------- */
+/* UTILS */
 
 function val(id) {
-  return document.getElementById(id).value.trim();
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
 
 function toggleLocation() {
