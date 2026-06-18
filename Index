@@ -216,6 +216,25 @@
       font-size:13px;
       margin:10px 0;
     }
+
+    .year-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .year-btn {
+      background:#e2e8f0;
+      color:#0f172a;
+      border:1px solid #cbd5e1;
+    }
+
+    .year-btn.active {
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+    }
   </style>
 </head>
 
@@ -369,16 +388,17 @@
         <br>
 
         <label>ชั้นปีที่สามารถเข้าร่วมได้</label>
-        <select id="allowedYears" multiple>
-          <option value="ทุกชั้นปี">ทุกชั้นปี</option>
-          <option value="1">ปี 1</option>
-          <option value="2">ปี 2</option>
-          <option value="3">ปี 3</option>
-          <option value="4">ปี 4</option>
-          <option value="ค้างรุ่น">ค้างรุ่น</option>
-        </select>
 
-        <br><br>
+        <div class="year-buttons" id="allowedYearsBox">
+          <button type="button" class="year-btn active" data-year="ทุกชั้นปี" onclick="toggleYear(this)">ทุกชั้นปี</button>
+          <button type="button" class="year-btn" data-year="1" onclick="toggleYear(this)">ปี 1</button>
+          <button type="button" class="year-btn" data-year="2" onclick="toggleYear(this)">ปี 2</button>
+          <button type="button" class="year-btn" data-year="3" onclick="toggleYear(this)">ปี 3</button>
+          <button type="button" class="year-btn" data-year="4" onclick="toggleYear(this)">ปี 4</button>
+          <button type="button" class="year-btn" data-year="ค้างรุ่น" onclick="toggleYear(this)">ค้างรุ่น</button>
+        </div>
+
+        <br>
 
         <button onclick="saveEvent()">บันทึกกิจกรรม</button>
         <button class="btn-light" onclick="clearEventForm()">ล้างฟอร์ม</button>
@@ -480,8 +500,8 @@ async function login() {
 
     document.getElementById('welcomeText').innerText =
       currentRole === 'admin'
-      ? 'ผู้ดูแลระบบ'
-      : `${currentStudent.fullName} (${currentStudent.studentId})`;
+        ? 'ผู้ดูแลระบบ'
+        : `${currentStudent.fullName} (${currentStudent.studentId})`;
 
     buildMenu();
 
@@ -532,13 +552,33 @@ async function showPage(id) {
   }
 }
 
-/* ADMIN EVENT */
+/* ---------- YEAR BUTTONS ---------- */
 
-function selectedValues(id) {
-  return Array.from(document.getElementById(id).selectedOptions)
-    .map(o => o.value)
+function selectedYears() {
+  return Array.from(document.querySelectorAll('.year-btn.active'))
+    .map(btn => btn.dataset.year)
     .join(',');
 }
+
+function toggleYear(btn) {
+  const year = btn.dataset.year;
+
+  if (year === 'ทุกชั้นปี') {
+    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    return;
+  }
+
+  document.querySelector('.year-btn[data-year="ทุกชั้นปี"]').classList.remove('active');
+  btn.classList.toggle('active');
+
+  const selected = document.querySelectorAll('.year-btn.active');
+  if (selected.length === 0) {
+    document.querySelector('.year-btn[data-year="ทุกชั้นปี"]').classList.add('active');
+  }
+}
+
+/* ---------- ADMIN EVENT ---------- */
 
 async function saveEvent() {
   try {
@@ -560,7 +600,7 @@ async function saveEvent() {
       checkoutMapLink: val('checkoutMapLink'),
       publishDate: val('publishDate'),
       level: val('level'),
-      allowedYears: selectedValues('allowedYears') || 'ทุกชั้นปี'
+      allowedYears: selectedYears() || 'ทุกชั้นปี'
     };
 
     const res = await call('saveEvent', data);
@@ -586,6 +626,7 @@ async function loadAdminEvents() {
           <th>เวลา</th>
           <th>จอง</th>
           <th>พิกัด</th>
+          <th>ชั้นปี</th>
           <th>จัดการ</th>
         </tr>
       </thead>
@@ -604,6 +645,7 @@ async function loadAdminEvents() {
               IN: ${e.checkinLat || '-'}, ${e.checkinLng || '-'}<br>
               OUT: ${e.checkoutLat || '-'}, ${e.checkoutLng || '-'}
             </td>
+            <td>${e.allowedYears || 'ทุกชั้นปี'}</td>
             <td>
               <button class="btn-light" onclick='editEvent(${JSON.stringify(e)})'>แก้ไข</button>
               <button class="btn-light" onclick="copyEvent('${e.eventId}')">คัดลอก</button>
@@ -620,14 +662,24 @@ function editEvent(e) {
   Object.keys(e).forEach(k => {
     const el = document.getElementById(k);
     if (!el) return;
+    el.value = e[k] || '';
+  });
 
-    if (el.tagName === 'SELECT' && el.multiple) {
-      const values = String(e[k] || '').split(',');
-      Array.from(el.options).forEach(opt => opt.selected = values.includes(opt.value));
-    } else {
-      el.value = e[k] || '';
+  document.querySelectorAll('.year-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  const years = String(e.allowedYears || 'ทุกชั้นปี').split(',');
+
+  document.querySelectorAll('.year-btn').forEach(btn => {
+    if (years.includes(btn.dataset.year)) {
+      btn.classList.add('active');
     }
   });
+
+  if (document.querySelectorAll('.year-btn.active').length === 0) {
+    document.querySelector('.year-btn[data-year="ทุกชั้นปี"]').classList.add('active');
+  }
 }
 
 async function copyEvent(eventId) {
@@ -648,11 +700,11 @@ function clearEventForm() {
   document.querySelectorAll('#adminEventsPage input, #adminEventsPage textarea')
     .forEach(el => el.value = '');
 
-  Array.from(document.getElementById('allowedYears').options)
-    .forEach(opt => opt.selected = false);
+  document.querySelectorAll('.year-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector('.year-btn[data-year="ทุกชั้นปี"]').classList.add('active');
 }
 
-/* ADMIN STUDENT */
+/* ---------- ADMIN STUDENT ---------- */
 
 async function saveStudent() {
   try {
@@ -673,7 +725,7 @@ async function saveStudent() {
   }
 }
 
-/* STUDENT */
+/* ---------- STUDENT ---------- */
 
 async function loadStudentEvents() {
   allEvents = await call('getEvents');
@@ -690,6 +742,7 @@ async function loadStudentEvents() {
         <span class="badge">${e.level}</span>
         <span class="badge">${e.activityType}</span>
         <span class="badge">จองแล้ว ${e.booked}/${e.capacity}</span>
+        <span class="badge">ชั้นปี: ${e.allowedYears || 'ทุกชั้นปี'}</span>
       </div>
 
       <br>
@@ -801,7 +854,7 @@ async function doCheckOut(eventId) {
   }
 }
 
-/* REPORT */
+/* ---------- REPORT ---------- */
 
 async function loadReportEvents() {
   allEvents = await call('getEvents');
@@ -855,7 +908,7 @@ async function openExport(type) {
   window.open(links[type], '_blank');
 }
 
-/* UTILS */
+/* ---------- UTILS ---------- */
 
 function val(id) {
   const el = document.getElementById(id);
