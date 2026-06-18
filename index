@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ระบบจองกิจกรรม</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --blue:#2563eb;
+      --sky:#38bdf8;
+      --dark:#0f172a;
+      --gray:#64748b;
+      --light:#f8fafc;
+      --white:#ffffff;
+      --border:#e2e8f0;
+    }
+
+    * {
+      box-sizing:border-box;
+      font-family:'Prompt',sans-serif;
+    }
+
+    body {
+      margin:0;
+      background:linear-gradient(135deg,#eff6ff,#f8fafc);
+      color:var(--dark);
+    }
+
+    header {
+      background:linear-gradient(135deg,var(--blue),#0f172a);
+      color:white;
+      padding:24px;
+      border-radius:0 0 28px 28px;
+      box-shadow:0 12px 30px rgba(15,23,42,.25);
+    }
+
+    header h1 {
+      margin:0;
+      font-size:24px;
+    }
+
+    header p {
+      margin:6px 0 0;
+      color:#dbeafe;
+    }
+
+    .container {
+      max-width:1200px;
+      margin:auto;
+      padding:20px;
+    }
+
+    .card {
+      background:white;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:20px;
+      margin-bottom:18px;
+      box-shadow:0 8px 24px rgba(15,23,42,.08);
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:12px;
+    }
+
+    label {
+      font-size:13px;
+      color:var(--gray);
+      display:block;
+      margin-bottom:5px;
+    }
+
+    input, textarea, select {
+      width:100%;
+      padding:11px 12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      font-size:14px;
+      background:#fff;
+    }
+
+    textarea {
+      min-height:80px;
+      resize:vertical;
+    }
+
+    button {
+      border:none;
+      border-radius:12px;
+      padding:11px 16px;
+      cursor:pointer;
+      font-weight:600;
+      background:var(--blue);
+      color:white;
+      transition:.2s;
+    }
+
+    button:hover {
+      transform:translateY(-1px);
+      opacity:.9;
+    }
+
+    .btn-light {
+      background:#e0f2fe;
+      color:#075985;
+    }
+
+    .btn-dark {
+      background:#0f172a;
+      color:white;
+    }
+
+    .btn-red {
+      background:#dc2626;
+    }
+
+    .hidden {
+      display:none;
+    }
+
+    nav {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:18px 0;
+    }
+
+    .tab {
+      background:#e2e8f0;
+      color:#0f172a;
+    }
+
+    .tab.active {
+      background:var(--blue);
+      color:white;
+    }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+
+    th,td {
+      border-bottom:1px solid var(--border);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    th {
+      background:#f1f5f9;
+      color:#334155;
+    }
+
+    .badge {
+      padding:4px 9px;
+      border-radius:999px;
+      font-size:12px;
+      display:inline-block;
+      background:#e0f2fe;
+      color:#075985;
+    }
+
+    .calendar {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:14px;
+    }
+
+    .event {
+      border:1px solid var(--border);
+      border-left:6px solid var(--blue);
+      border-radius:16px;
+      padding:15px;
+      background:#fff;
+    }
+
+    .event h3 {
+      margin:0 0 8px;
+    }
+
+    .small {
+      color:var(--gray);
+      font-size:13px;
+    }
+
+    .status {
+      margin-top:10px;
+      padding:10px;
+      background:#f8fafc;
+      border-radius:12px;
+    }
+
+    .login-box {
+      max-width:430px;
+      margin:40px auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>ระบบจองกิจกรรมและ Check-in / Check-out</h1>
+  <p>Activity Booking Web Application</p>
+</header>
+
+<div class="container">
+
+  <section id="loginSection" class="card login-box">
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="small">นักศึกษาเข้าสู่ระบบด้วยรหัสนักศึกษา 8 หลัก และรหัสผ่านเป็นวันเดือนปีเกิด 8 หลัก</p>
+
+    <label>Username</label>
+    <input id="loginUser" placeholder="รหัสนักศึกษา">
+
+    <label>Password</label>
+    <input id="loginPass" type="password" placeholder="วันเดือนปีเกิด 8 หลัก">
+
+    <br><br>
+    <button onclick="login()">เข้าสู่ระบบ</button>
+  </section>
+
+  <section id="appSection" class="hidden">
+    <div class="card">
+      <b id="welcomeText"></b>
+      <button class="btn-dark" style="float:right" onclick="logout()">ออกจากระบบ</button>
+    </div>
+
+    <nav id="menu"></nav>
+
+    <!-- STUDENT -->
+    <section id="studentPage" class="hidden">
+      <div class="card">
+        <h2>ปฏิทินกิจกรรม</h2>
+        <div id="eventCalendar" class="calendar"></div>
+      </div>
+
+      <div class="card">
+        <h2>กิจกรรมที่ฉันจอง</h2>
+        <div id="myBookings"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN EVENTS -->
+    <section id="adminEventsPage" class="hidden">
+      <div class="card">
+        <h2>จัดการกิจกรรม</h2>
+
+        <input id="eventId" type="hidden">
+
+        <div class="grid">
+          <div>
+            <label>ชื่อกิจกรรม</label>
+            <input id="title">
+          </div>
+
+          <div>
+            <label>วันที่จัดกิจกรรม</label>
+            <input id="eventDate" type="date">
+          </div>
+
+          <div>
+            <label>เวลาเริ่ม</label>
+            <input id="startTime" type="time">
+          </div>
+
+          <div>
+            <label>เวลาสิ้นสุด</label>
+            <input id="endTime" type="time">
+          </div>
+
+          <div>
+            <label>จำนวนรับ</label>
+            <input id="capacity" type="number">
+          </div>
+
+          <div>
+            <label>ประเภทกิจกรรม</label>
+            <select id="activityType" onchange="toggleLocation()">
+              <option value="online">online</option>
+              <option value="on-site">on-site</option>
+            </select>
+          </div>
+
+          <div>
+            <label>กิจกรรมระดับ</label>
+            <select id="level">
+              <option value="มหาวิทยาลัย">มหาวิทยาลัย</option>
+              <option value="คณะ">คณะ</option>
+            </select>
+          </div>
+
+          <div>
+            <label>ประกาศให้เห็นตั้งแต่วันที่</label>
+            <input id="publishDate" type="date">
+          </div>
+        </div>
+
+        <br>
+
+        <label>รายละเอียดกิจกรรม</label>
+        <textarea id="description"></textarea>
+
+        <div class="grid">
+          <div>
+            <label>Check-in ตั้งแต่</label>
+            <input id="checkinStart" type="time">
+          </div>
+
+          <div>
+            <label>Check-in สิ้นสุด</label>
+            <input id="checkinEnd" type="time">
+          </div>
+
+          <div>
+            <label>Check-out ตั้งแต่</label>
+            <input id="checkoutStart" type="time">
+          </div>
+
+          <div>
+            <label>Check-out สิ้นสุด</label>
+            <input id="checkoutEnd" type="time">
+          </div>
+        </div>
+
+        <br>
+
+        <div id="locationBox">
+          <label>Location / Google Map Link</label>
+          <input id="location" placeholder="วางลิงก์ Google Map หรือชื่อสถานที่">
+        </div>
+
+        <div class="grid">
+          <div>
+            <label>พิกัด Check-in Latitude</label>
+            <input id="checkinLat">
+          </div>
+          <div>
+            <label>พิกัด Check-in Longitude</label>
+            <input id="checkinLng">
+          </div>
+          <div>
+            <label>พิกัด Check-out Latitude</label>
+            <input id="checkoutLat">
+          </div>
+          <div>
+            <label>พิกัด Check-out Longitude</label>
+            <input id="checkoutLng">
+          </div>
+        </div>
+
+        <br>
+
+        <label>ชั้นปีที่เข้าร่วมได้</label>
+        <select id="allowedYears" multiple>
+          <option value="ทุกชั้นปี">ทุกชั้นปี</option>
+          <option value="1">ปี 1</option>
+          <option value="2">ปี 2</option>
+          <option value="3">ปี 3</option>
+          <option value="4">ปี 4</option>
+          <option value="ค้างรุ่น">ค้างรุ่น</option>
+        </select>
+
+        <br><br>
+        <button onclick="saveEvent()">บันทึกกิจกรรม</button>
+        <button class="btn-light" onclick="clearEventForm()">ล้างฟอร์ม</button>
+      </div>
+
+      <div class="card">
+        <h2>รายการกิจกรรมทั้งหมด</h2>
+        <div id="adminEventList"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN STUDENTS -->
+    <section id="adminStudentsPage" class="hidden">
+      <div class="card">
+        <h2>เพิ่ม / แก้ไขรายชื่อนักศึกษา</h2>
+
+        <div class="grid">
+          <div>
+            <label>รหัสนักศึกษา</label>
+            <input id="studentId">
+          </div>
+          <div>
+            <label>ชื่อ-สกุล</label>
+            <input id="fullName">
+          </div>
+          <div>
+            <label>สาขาวิชา</label>
+            <input id="major">
+          </div>
+          <div>
+            <label>คณะ</label>
+            <input id="faculty">
+          </div>
+          <div>
+            <label>วันเดือนปีเกิด 8 หลัก</label>
+            <input id="birthDate">
+          </div>
+          <div>
+            <label>เบอร์โทรศัพท์</label>
+            <input id="phone">
+          </div>
+        </div>
+
+        <br>
+        <button onclick="saveStudent()">บันทึกนักศึกษา</button>
+      </div>
+    </section>
+
+    <!-- ADMIN REPORT -->
+    <section id="adminReportPage" class="hidden">
+      <div class="card">
+        <h2>รายงานการจอง / Check-in / Check-out</h2>
+
+        <label>เลือกกิจกรรม</label>
+        <select id="reportEvent" onchange="loadReport()"></select>
+
+        <br><br>
+        <button onclick="openExport('excel')">ส่งออก Excel</button>
+        <button class="btn-light" onclick="openExport('pdf')">ส่งออก PDF</button>
+
+        <div id="reportTable" style="margin-top:20px"></div>
+      </div>
+    </section>
+  </section>
+
+</div>
+
+<script>
+let currentUser = null;
+let currentRole = null;
+let currentStudent = null;
+let allEvents = [];
+
+function call(fn, ...args) {
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(err => reject(err))
+      [fn](...args);
+  });
+}
+
+async function login() {
+  try {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+
+    const res = await call('login', user, pass);
+
+    if (!res.ok) {
+      alert(res.message);
+      return;
+    }
+
+    currentUser = res.user;
+    currentRole = res.role;
+    currentStudent = res.student || null;
+
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('appSection').classList.remove('hidden');
+
+    document.getElementById('welcomeText').innerText =
+      currentRole === 'admin'
+      ? 'ผู้ดูแลระบบ'
+      : `${currentStudent.fullName} (${currentStudent.studentId})`;
+
+    buildMenu();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+function logout() {
+  location.reload();
+}
+
+function buildMenu() {
+  const menu = document.getElementById('menu');
+  menu.innerHTML = '';
+
+  if (currentRole === 'admin') {
+    menu.innerHTML = `
+      <button class="tab active" onclick="showPage('adminEventsPage')">จัดการกิจกรรม</button>
+      <button class="tab" onclick="showPage('adminStudentsPage')">รายชื่อนักศึกษา</button>
+      <button class="tab" onclick="showPage('adminReportPage')">รายงาน</button>
+    `;
+    showPage('adminEventsPage');
+  } else {
+    menu.innerHTML = `
+      <button class="tab active" onclick="showPage('studentPage')">กิจกรรม / การจอง</button>
+    `;
+    showPage('studentPage');
+  }
+}
+
+async function showPage(id) {
+  ['studentPage','adminEventsPage','adminStudentsPage','adminReportPage']
+    .forEach(p => document.getElementById(p).classList.add('hidden'));
+
+  document.getElementById(id).classList.remove('hidden');
+
+  if (id === 'studentPage') {
+    await loadStudentEvents();
+    await loadMyBookings();
+  }
+
+  if (id === 'adminEventsPage') {
+    await loadAdminEvents();
+  }
+
+  if (id === 'adminReportPage') {
+    await loadReportEvents();
+  }
+}
+
+/* ---------- Admin Event ---------- */
+
+function selectedValues(id) {
+  return Array.from(document.getElementById(id).selectedOptions).map(o => o.value).join(',');
+}
+
+async function saveEvent() {
+  try {
+    const data = {
+      eventId: val('eventId'),
+      title: val('title'),
+      description: val('description'),
+      eventDate: val('eventDate'),
+      startTime: val('startTime'),
+      endTime: val('endTime'),
+      capacity: val('capacity'),
+      checkinStart: val('checkinStart'),
+      checkinEnd: val('checkinEnd'),
+      checkoutStart: val('checkoutStart'),
+      checkoutEnd: val('checkoutEnd'),
+      activityType: val('activityType'),
+      location: val('location'),
+      checkinLat: val('checkinLat'),
+      checkinLng: val('checkinLng'),
+      checkoutLat: val('checkoutLat'),
+      checkoutLng: val('checkoutLng'),
+      publishDate: val('publishDate'),
+      level: val('level'),
+      allowedYears: selectedValues('allowedYears') || 'ทุกชั้นปี',
+      status: 'active'
+    };
+
+    const res = await call('saveEvent', data);
+    alert(res.message);
+    clearEventForm();
+    loadAdminEvents();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function loadAdminEvents() {
+  allEvents = await call('getEvents');
+
+  document.getElementById('adminEventList').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>กิจกรรม</th>
+          <th>วันที่</th>
+          <th>เวลา</th>
+          <th>จอง</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${allEvents.map(e => `
+          <tr>
+            <td>
+              <b>${e.title}</b><br>
+              <span class="badge">${e.level}</span>
+              <span class="badge">${e.activityType}</span>
+            </td>
+            <td>${e.eventDate}</td>
+            <td>${e.startTime} - ${e.endTime}</td>
+            <td>${e.booked}/${e.capacity}</td>
+            <td>
+              <button class="btn-light" onclick='editEvent(${JSON.stringify(e)})'>แก้ไข</button>
+              <button class="btn-light" onclick="copyEvent('${e.eventId}')">คัดลอก</button>
+              <button class="btn-red" onclick="deleteEvent('${e.eventId}')">ลบ</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function editEvent(e) {
+  Object.keys(e).forEach(k => {
+    const el = document.getElementById(k);
+    if (el && el.tagName !== 'SELECT') el.value = e[k];
+    if (el && el.tagName === 'SELECT' && !el.multiple) el.value = e[k];
+  });
+}
+
+async function copyEvent(eventId) {
+  const res = await call('copyEvent', eventId);
+  alert(res.message);
+  loadAdminEvents();
+}
+
+async function deleteEvent(eventId) {
+  if (!confirm('ยืนยันการลบกิจกรรมนี้?')) return;
+  const res = await call('deleteEvent', eventId);
+  alert(res.message);
+  loadAdminEvents();
+}
+
+function clearEventForm() {
+  document.querySelectorAll('#adminEventsPage input, #adminEventsPage textarea')
+    .forEach(el => el.value = '');
+}
+
+/* ---------- Student ---------- */
+
+async function loadStudentEvents() {
+  allEvents = await call('getEvents');
+
+  const visibleEvents = allEvents.filter(e => e.visible);
+
+  document.getElementById('eventCalendar').innerHTML = visibleEvents.map(e => `
+    <div class="event">
+      <h3>${e.title}</h3>
+      <div class="small">${e.eventDate} | ${e.startTime} - ${e.endTime}</div>
+      <div class="small">${e.description || ''}</div>
+      <div class="status">
+        <span class="badge">${e.level}</span>
+        <span class="badge">${e.activityType}</span>
+        <span class="badge">จองแล้ว ${e.booked}/${e.capacity}</span>
+      </div>
+      <br>
+      <button onclick="openBooking('${e.eventId}')">จองกิจกรรม</button>
+    </div>
+  `).join('');
+}
+
+async function openBooking(eventId) {
+  const phone = prompt('กรอกเบอร์โทรศัพท์ 10 หลักเพื่ออัปเดตข้อมูล');
+  if (!phone) return;
+
+  const birthDate = prompt('กรอกวันเดือนปีเกิด 8 หลัก เพื่อยืนยันการจอง');
+  if (!birthDate) return;
+
+  try {
+    const res = await call('bookEvent', eventId, currentStudent.studentId, phone, birthDate);
+    alert(res.message);
+    loadStudentEvents();
+    loadMyBookings();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function loadMyBookings() {
+  const bookings = await call('getMyBookings', currentStudent.studentId);
+
+  document.getElementById('myBookings').innerHTML = bookings.map(b => `
+    <div class="event">
+      <h3>${b.event.title}</h3>
+      <div class="small">${b.event.eventDate} | ${b.event.startTime} - ${b.event.endTime}</div>
+      <div class="status">
+        สถานะ: <b>${b.status}</b><br>
+        Check-in: ${b.checkinAt || '-'}<br>
+        Check-out: ${b.checkoutAt || '-'}
+      </div>
+      <br>
+      <button onclick="doCheckIn('${b.eventId}')">Check-in</button>
+      <button class="btn-dark" onclick="doCheckOut('${b.eventId}')">Check-out</button>
+    </div>
+  `).join('');
+}
+
+function getLocation() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('อุปกรณ์นี้ไม่รองรับ Location'));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      }),
+      () => reject(new Error('กรุณาอนุญาตให้ใช้ Location ก่อนใช้งาน')),
+      { enableHighAccuracy:true }
+    );
+  });
+}
+
+async function requestCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video:true });
+    stream.getTracks().forEach(t => t.stop());
+    return true;
+  } catch {
+    throw new Error('กรุณาอนุญาตให้ใช้กล้องก่อน Check-in / Check-out');
+  }
+}
+
+async function doCheckIn(eventId) {
+  try {
+    await requestCamera();
+    const loc = await getLocation();
+    const res = await call('checkIn', eventId, currentStudent.studentId, loc.lat, loc.lng);
+    alert(res.message);
+    loadMyBookings();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function doCheckOut(eventId) {
+  try {
+    await requestCamera();
+    const loc = await getLocation();
+    const res = await call('checkOut', eventId, currentStudent.studentId, loc.lat, loc.lng);
+    alert(res.message);
+    loadMyBookings();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+/* ---------- Students Admin ---------- */
+
+async function saveStudent() {
+  try {
+    const data = {
+      studentId: val('studentId'),
+      fullName: val('fullName'),
+      major: val('major'),
+      faculty: val('faculty'),
+      birthDate: val('birthDate'),
+      phone: val('phone')
+    };
+
+    const res = await call('saveStudent', data);
+    alert(res.message);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+/* ---------- Report ---------- */
+
+async function loadReportEvents() {
+  allEvents = await call('getEvents');
+  document.getElementById('reportEvent').innerHTML =
+    allEvents.map(e => `<option value="${e.eventId}">${e.title}</option>`).join('');
+
+  loadReport();
+}
+
+async function loadReport() {
+  const eventId = val('reportEvent');
+  if (!eventId) return;
+
+  const rows = await call('getEventReport', eventId);
+
+  document.getElementById('reportTable').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>รหัส</th>
+          <th>ชื่อ-สกุล</th>
+          <th>คณะ</th>
+          <th>สาขา</th>
+          <th>ชั้นปี</th>
+          <th>สถานะ</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => `
+          <tr>
+            <td>${r.studentId}</td>
+            <td>${r.fullName || ''}</td>
+            <td>${r.faculty || ''}</td>
+            <td>${r.major || ''}</td>
+            <td>${r.yearLevel || ''}</td>
+            <td>${r.status}</td>
+            <td>${r.checkinAt || '-'}</td>
+            <td>${r.checkoutAt || '-'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+async function openExport(type) {
+  const links = await call('getExportLinks');
+  window.open(links[type], '_blank');
+}
+
+/* ---------- Utils ---------- */
+
+function val(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function toggleLocation() {
+  const type = val('activityType');
+  document.getElementById('locationBox').style.display =
+    type === 'on-site' ? 'block' : 'none';
+}
+</script>
+
+</body>
+</html>
