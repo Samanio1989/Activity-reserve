@@ -1,4 +1,4 @@
-const API_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzxxlmZwF8avOJCBsa9I-7LQHZen8M-JYIaGrTTfr5gOJ3IiPeILwWZVvKfyu0mL-h_/exec';
 
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = '1900';
